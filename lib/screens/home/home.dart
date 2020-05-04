@@ -11,6 +11,10 @@ import 'package:up_depense/utils/util.dart';
 import 'package:up_depense/utils/sliver_header.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../bloc/bloc.dart';
+import '../../bloc/bloc.dart';
+import 'login.dart';
+
 class UpdepenseHome extends StatefulWidget {
   static final String routeName = "/home";
   @override
@@ -45,8 +49,35 @@ class _UpdepenseHomeState extends State<UpdepenseHome> {
             elevation: 3,
           ),
         ),
-        body: BlocProvider(
-          create: (BuildContext context) => AppBloc(),
+        body: BlocListener<AppBloc, AppState>(
+          listener: (context, state) {
+            if (state is OnLogoutState) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => AlertDialog(
+                  content: Column(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      Text(
+                        "Déconnexion en cours",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.dmSans(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            } else if (state is LogoutSucces) {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, Login.routeName);
+            }
+          },
           child: BlocBuilder<AppBloc, AppState>(
               bloc: _bloc,
               builder: (context, state) {
@@ -145,10 +176,11 @@ class _UpdepenseHomeState extends State<UpdepenseHome> {
                                       child: Text(
                                         "Tableau de bord",
                                         style: GoogleFonts.dmSans(
-                                            textStyle: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 18,
-                                        )),
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 18,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     buildDashBord(

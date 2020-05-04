@@ -6,7 +6,12 @@ import 'package:up_depense/model/user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../bloc/index.dart';
+
 class DrawerHome extends StatefulWidget {
+  final appBloc;
+
+  const DrawerHome({Key key, this.appBloc}) : super(key: key);
   @override
   _DrawerHomeState createState() => _DrawerHomeState();
 }
@@ -150,7 +155,10 @@ class _DrawerHomeState extends State<DrawerHome> {
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Icon(Icons.exit_to_app, size: 20.0, color: Colors.white),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+            widget.appBloc.add(LogoutEvent());
+          },
         ),
       ),
     );

@@ -77,6 +77,36 @@ class LoginEvent extends AppEvent {
     }
   }
 }
+class LogoutEvent extends AppEvent {
+  @override
+  Stream<AppState> applyAnsyc({AppState curentState, AppBloc bloc}) async* {
+    String checkConnexion = await isConnected();
+
+    if (checkConnexion == 'access') {
+      yield OnLogoutState();
+      try {
+        var _repository = AppRepository();
+        var getResponse = await _repository.logout();
+        var data = jsonDecode(getResponse.body);
+
+        if (data['message'] == 'Vous avez été deconnecté') {
+          UpDepense.user = null;
+          setUserID('');
+          setMobileToken('');
+          yield LogoutSucces();
+        } else
+          yield ErrorUIState();
+      } catch (e, stactTrace) {
+        yield ErrorUIState();
+        print(stactTrace.toString());
+      }
+    } else if (checkConnexion == "no access") {
+      yield NoAccessState();
+    } else {
+      yield NotConnected();
+    }
+  }
+}
 
 class ValidateEvent extends AppEvent {
   @override

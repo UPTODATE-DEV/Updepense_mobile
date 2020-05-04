@@ -5,6 +5,10 @@ import 'index.dart';
 
 class InitialState extends AppState {}
 
+class LogoutSucces extends AppState {}
+
+class OnLogoutState extends AppState {}
+
 class HomeLoading extends AppState {}
 
 class HomeLoaded extends AppState {

@@ -6,6 +6,7 @@ import 'package:up_depense/utils/up_depense.dart';
 class AppRepository {
   String _transactionService = "/transactions/";
   String _loginService = "/login";
+  String _logoutService = "/logout";
 
   Future<Response> getDepense() async {
     String codeEntreprise = UpDepense.user.codeEntrep.toString();
@@ -24,9 +25,13 @@ class AppRepository {
       "password": password,
       "device_name": deviceInfo
     });
-
-    print(result.body);
-
+    return result;
+  }
+  Future<Response> logout() async {
+    String deviceInfo = await getDeviceIdentity();
+    var result = await httpPostWithToken(serviceApi: _logoutService, data: {
+      "device_name": deviceInfo
+    });
     return result;
   }
 }
