@@ -42,7 +42,7 @@ Future<String> getDeviceIdentity() async {
 /// ----------------------------------------------------------
 
 String getMobileToken() {
-  return UpDepense.prefs.getString(storageKeyMobileToken);
+  return UpDepense.prefs.getString(storageKeyMobileToken) ?? '';
 }
 
 /// ----------------------------------------------------------
