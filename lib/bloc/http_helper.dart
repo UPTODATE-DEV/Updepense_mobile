@@ -116,7 +116,7 @@ Future<http.Response> httpPost(
 
 Future<http.Response> httpPostWithToken(
     {String serviceApi, Map<String, dynamic> data}) async {
-  String token = getMobileToken();
+  String token = getMobileToken().isEmpty ? UpDepense.token : getMobileToken();
   var response;
   try {
     response = await http.post(_urlBase + '$serviceApi', body: data, headers: {
