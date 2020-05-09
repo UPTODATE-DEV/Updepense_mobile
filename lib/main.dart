@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:up_depense/historique/historique.dart';
 import 'package:up_depense/screens/home/home.dart';
 import 'package:up_depense/screens/home/login.dart';
 import 'package:up_depense/screens/splach.dart';
@@ -14,6 +15,7 @@ class AppDepense extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
+        Historique.routeName: (context) => Historique(),
         UpdepenseHome.routeName: (context) => UpdepenseHome(),
         Login.routeName: (context) => Login(),
       },

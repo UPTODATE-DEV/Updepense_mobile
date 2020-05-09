@@ -225,6 +225,7 @@ class _LoginState extends State<Login> {
                                 ),
                                 Expanded(
                                   child: TextField(
+                                    onSubmitted: (value) {},
                                     controller: _password,
                                     obscureText: isObscureText,
                                     decoration: InputDecoration(
@@ -267,7 +268,7 @@ class _LoginState extends State<Login> {
                                 onChanged: _rememberMe,
                               ),
                               Text(
-                                "Enrégistrer mot de passe",
+                                "Sauvegarder le mot de passe",
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.dmSans(
                                   decoration: TextDecoration.underline,
@@ -336,7 +337,7 @@ class _LoginState extends State<Login> {
     return Padding(
       padding: EdgeInsets.all(10),
       child: Text(
-        "Gardez l'oeil sur le budget de votre\nentreprise toujours haut",
+        "Recevez votre rapport journalier des activités\nde votre entreprise",
         textAlign: TextAlign.center,
         style: GoogleFonts.dmSans(
             textStyle: TextStyle(

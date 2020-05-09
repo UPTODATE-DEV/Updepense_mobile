@@ -1,22 +1,16 @@
 class ResultTransaction {
-  double sortie;
-  double entree;
-  double solde;
+  var sortie;
+  var entree;
+  var solde;
   List<Transaction> transactions;
 
   ResultTransaction({this.sortie, this.entree, this.solde, this.transactions});
 
   ResultTransaction.fromJson(Map<String, dynamic> json) {
-    sortie = json['sortie'].runtimeType == int
-        ? double.tryParse(json['sortie'].toString())
-        : json["sortie"];
+    sortie = json["sortie"];
 
-    entree = json['entree'].runtimeType == int
-        ? double.tryParse(json['entree'].toString())
-        : json['entree'];
-    solde = json['solde'].runtimeType == int
-        ? double.tryParse(json['solde'].toString())
-        : json['solde'];
+    entree = json['entree'];
+    solde = json['solde'];
     if (json['transactions'] != null) {
       transactions = new List<Transaction>();
       json['transactions'].forEach((v) {
@@ -42,7 +36,7 @@ class Transaction {
   int codeEntrep;
   String psedo;
   String typeOp;
-  double montant;
+  var montant;
   String devise;
   String motif;
   String nom;

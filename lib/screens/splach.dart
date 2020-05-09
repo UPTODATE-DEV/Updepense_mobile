@@ -72,7 +72,7 @@ class _SplachState extends State<Splach> {
                       child: BlocBuilder<AppBloc, AppState>(
                           bloc: _bloc,
                           builder: (context, state) {
-                            print(state);
+                            // print(state);
                             if (state is HomeLoading) {
                               return Loading(
                                 color: Theme.of(context).primaryColor,

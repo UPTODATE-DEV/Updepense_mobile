@@ -42,8 +42,10 @@ custormAppBar(BuildContext context,
     shadowColor: Colors.grey.withOpacity(.5),
     elevation: 2,
     child: Container(
+      decoration: BoxDecoration(),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding:
+            const EdgeInsets.only(top: 10.0, bottom: 15, right: 10, left: 10),
         child: Column(
           children: <Widget>[
             Row(
@@ -75,7 +77,7 @@ custormAppBar(BuildContext context,
                   "$monthAndYear",
                   style: GoogleFonts.dmSans(
                       textStyle: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
                   )),
@@ -102,7 +104,7 @@ buildUIError(
 }) {
   return Center(
     child: Container(
-      margin: EdgeInsets.all(5),
+      margin: EdgeInsets.only(top: 25, left: 5, right: 5, bottom: 5),
       width: MediaQuery.of(context).size.width - 70,
       child: Material(
         shadowColor: Colors.grey.withOpacity(.2),
@@ -186,6 +188,47 @@ buildUIError(
             ),
           ],
         ),
+      ),
+    ),
+  );
+}
+
+buildLogoutProgress(
+  BuildContext context, {
+  String titleMessage,
+  String subTitleMessage,
+  String img,
+}) {
+  return Center(
+    child: Container(
+      // margin: EdgeInsets.all(5),
+      width: MediaQuery.of(context).size.width - 70,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 150,
+            padding: EdgeInsets.all(10),
+            child: SvgPicture.asset(img),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 3.0),
+            child: Text(
+              "$titleMessage",
+              style: GoogleFonts.dmSans(
+                  textStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+              )),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 80.0, right: 80, bottom: 10),
+            child: Loading(
+              size: 30,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
       ),
     ),
   );

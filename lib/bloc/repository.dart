@@ -7,13 +7,21 @@ class AppRepository {
   String _transactionService = "/transactions/";
   String _loginService = "/login";
   String _logoutService = "/logout";
+  String _validateService = "/transaction/validate";
 
   Future<Response> getDepense() async {
     String codeEntreprise = UpDepense.user.codeEntrep.toString();
-    print("Voici le code entreprise $codeEntreprise");
     var result = await httpGetWithToken(
       serviceApi: "$_transactionService$codeEntreprise",
     );
+
+    return result;
+  }
+
+  Future<Response> validateDepense({String opID, int status}) async {
+    var result = await httpPostWithToken(
+        serviceApi: "$_validateService",
+        data: {"operation": opID, "status": status.toString()});
 
     return result;
   }
@@ -27,11 +35,11 @@ class AppRepository {
     });
     return result;
   }
+
   Future<Response> logout() async {
     String deviceInfo = await getDeviceIdentity();
-    var result = await httpPostWithToken(serviceApi: _logoutService, data: {
-      "device_name": deviceInfo
-    });
+    var result = await httpPostWithToken(
+        serviceApi: _logoutService, data: {"device_name": deviceInfo});
     return result;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:up_depense/bloc/bloc.dart';
 import 'package:up_depense/bloc/index.dart';
@@ -32,8 +33,13 @@ class HomeDialog extends StatelessWidget {
               bloc: _bloc,
               builder: (context, state) {
                 print(state);
+
                 if (state is SuccessState) {
-                  return Container();
+                  return buidSuccess(
+                    context: context,
+                    state: state,
+                    message: state.message,
+                  );
                 } else {
                   return buidData(context: context, bloc: _bloc, state: state);
                 }
@@ -160,7 +166,9 @@ class HomeDialog extends StatelessWidget {
             ),
             color: Theme.of(context).primaryColor,
             onPressed: () {
-              bloc.add(ValidateEvent());
+              bloc.add(
+                ValidateEvent(opID: transactionHere.code.toString(), status: 0),
+              );
             },
             child: Container(
               alignment: Alignment.center,
@@ -172,7 +180,7 @@ class HomeDialog extends StatelessWidget {
                       color: Colors.white,
                     )
                   : Text(
-                      "Validé",
+                      "Valider",
                       style: GoogleFonts.dmSans(
                         textStyle: TextStyle(
                           fontSize: 16,
@@ -188,7 +196,9 @@ class HomeDialog extends StatelessWidget {
             ),
             color: Color(0xFF17ADA3),
             onPressed: () {
-              bloc.add(RejeteEvent());
+              bloc.add(
+                ValidateEvent(opID: transactionHere.code.toString(), status: 1),
+              );
             },
             child: Container(
               alignment: Alignment.center,
@@ -200,7 +210,7 @@ class HomeDialog extends StatelessWidget {
                       color: Colors.white,
                     )
                   : Text(
-                      "Rejeté",
+                      "Rejeter",
                       style: GoogleFonts.dmSans(
                         textStyle: TextStyle(
                           fontSize: 16,
@@ -228,6 +238,156 @@ class HomeDialog extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  buidSuccess({
+    BuildContext context,
+    state,
+    bloc,
+    String message,
+  }) {
+    return Column(
+      children: <Widget>[
+        Container(
+          child: Icon(
+            message == "Validation reussi avec succes"
+                ? FontAwesomeIcons.check
+                : Icons.close,
+            size: 80,
+            color: message == "Validation reussi avec succes"
+                ? Color(0xFF17ADA3)
+                : Color(0xFFFF4400),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: Text(
+            "$message",
+            style: GoogleFonts.dmSans(
+                textStyle: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 18,
+            )),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(10),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey.withOpacity(.1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  "${transactionHere.psedo}",
+                  style: GoogleFonts.dmSans(
+                      textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  )),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Operation ",
+                      style: GoogleFonts.dmSans(
+                          textStyle: TextStyle(
+                        color: Colors.grey[800],
+                        // fontWeight: FontWeight.w600,
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(),
+              Row(
+                children: <Widget>[
+                  Text(
+                    "Opération: ",
+                    style: GoogleFonts.dmSans(
+                      textStyle: TextStyle(
+                        color: Colors.grey[800],
+                        // fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "${transactionHere.typeOp}",
+                    style: GoogleFonts.dmSans(
+                        textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    )),
+                  ),
+                  Spacer(),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: (transactionHere.typeOp == "ENTREE")
+                            ? Color(0xFF17ADA3)
+                            : Color(0xFFFF4400),
+                      ),
+                    ),
+                    child: Text(
+                        "${transactionHere.montant} ${transactionHere.devise}",
+                        style: GoogleFonts.dmSans(
+                          textStyle: TextStyle(
+                            color: (transactionHere.typeOp == "ENTREE")
+                                ? Color(0xFF17ADA3)
+                                : Color(0xFFFF4400),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          color: Theme.of(context).primaryColor,
+          onPressed: () {
+            Navigator.pop(
+              context,
+              "refreshHome",
+            );
+          },
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.only(left: 3, right: 3, top: 5, bottom: 5),
+            child: (state is HomeLoading)
+                ? Loading(
+                    size: 30,
+                    color: Colors.white,
+                  )
+                : Text(
+                    "Quitter",
+                    style: GoogleFonts.dmSans(
+                      textStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+          ),
+        ),
+      ],
     );
   }
 

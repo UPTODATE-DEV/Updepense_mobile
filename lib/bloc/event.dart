@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-// import 'package:http/http.dart';
 import 'package:up_depense/model/transaction.dart';
 import 'package:up_depense/model/user.dart';
 import 'package:up_depense/utils/up_depense.dart';
@@ -19,6 +17,7 @@ class HomeEvent extends AppEvent {
         var _repository = AppRepository();
         var getResponse = await _repository.getDepense();
         var data = jsonDecode(getResponse.body);
+        print(data);
         ResultTransaction list = ResultTransaction.fromJson(data);
 
         yield HomeLoaded(result: list);
@@ -40,6 +39,39 @@ class InitialLoginEvent extends AppEvent {
   }
 }
 
+class HistoriqueEvent extends AppEvent {
+  @override
+  Stream<AppState> applyAnsyc({AppState curentState, AppBloc bloc}) async* {
+    String checkConnexion = await isConnected();
+    yield HistoriqueLoading();
+    if (checkConnexion == 'access') {
+      yield HistoriqueLoading();
+      try {
+        var _repository = AppRepository();
+        var getResponse = await _repository.getDepense();
+        var data = jsonDecode(getResponse.body);
+        print(data);
+        ResultTransaction list = ResultTransaction.fromJson(data);
+
+        yield HistoriqueLoaded(result: list);
+      } catch (e, _) {
+        print(e.toString());
+      }
+    } else if (checkConnexion == "no access") {
+      yield NoAccessState();
+    } else {
+      yield NotConnected();
+    }
+  }
+}
+
+class LogoutRequestEvent extends AppEvent {
+  @override
+  Stream<AppState> applyAnsyc({AppState curentState, AppBloc bloc}) async* {
+    yield LogoutRequest();
+  }
+}
+
 class LoginEvent extends AppEvent {
   final String username;
   final String password;
@@ -57,6 +89,7 @@ class LoginEvent extends AppEvent {
         var getResponse = await _repository.login(
             username: this.username, password: this.password);
         var data = jsonDecode(getResponse.body);
+
         ResultUser resultUser = ResultUser.fromJson(data);
 
         if (data['message'] == null) {
@@ -77,6 +110,7 @@ class LoginEvent extends AppEvent {
     }
   }
 }
+
 class LogoutEvent extends AppEvent {
   @override
   Stream<AppState> applyAnsyc({AppState curentState, AppBloc bloc}) async* {
@@ -109,9 +143,39 @@ class LogoutEvent extends AppEvent {
 }
 
 class ValidateEvent extends AppEvent {
+  final String opID;
+  final int status;
+
+  ValidateEvent({this.opID, this.status});
   @override
   Stream<AppState> applyAnsyc({AppState curentState, AppBloc bloc}) async* {
-    yield ValidateState();
+    String checkConnexion = await isConnected();
+
+    if (checkConnexion == 'access') {
+      print(this.status);
+      yield this.status == 0 ? ValidateState() : RejeteState();
+      try {
+        var _repository = AppRepository();
+        var getResponse = await _repository.validateDepense(
+            opID: this.opID, status: this.status);
+
+        if (getResponse.statusCode == 200) {
+          yield this.status == 0
+              ? SuccessState(message: "Validation reussi avec succes")
+              : SuccessState(message: "Rejet reussi avec succes");
+        } else {
+          print(getResponse.body);
+          yield ErrorUIState();
+        }
+      } catch (e, stactTrace) {
+        yield ErrorUIState();
+        print(stactTrace.toString());
+      }
+    } else if (checkConnexion == "no access") {
+      yield NoAccessState();
+    } else {
+      yield NotConnected();
+    }
   }
 }
 
